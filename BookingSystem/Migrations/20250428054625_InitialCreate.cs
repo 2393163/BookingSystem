@@ -135,7 +135,7 @@ namespace BookingSystem.Migrations
                 name: "Insurances",
                 columns: table => new
                 {
-                    InsuranceID = table.Column<long>(type: "bigint", nullable: false)
+                    InsuranceID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<long>(type: "bigint", nullable: false),
                     BookingID = table.Column<long>(type: "bigint", nullable: false),

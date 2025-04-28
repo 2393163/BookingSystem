@@ -92,11 +92,11 @@ namespace BookingSystem.Migrations
 
             modelBuilder.Entity("BookingSystem.Entities.Insurance", b =>
                 {
-                    b.Property<long>("InsuranceID")
+                    b.Property<int>("InsuranceID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("InsuranceID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InsuranceID"));
 
                     b.Property<long>("BookingID")
                         .HasColumnType("bigint");
