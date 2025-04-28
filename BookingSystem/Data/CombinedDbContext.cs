@@ -5,9 +5,10 @@ namespace BookingSystem.Data
 {
     public class CombinedDbContext : DbContext
     {
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=TravelBookingDb-2;Integrated Security=True;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=TravelBookingDb-4;Integrated Security=True;TrustServerCertificate=true");
         }
 
         public DbSet<User> Users { get; set; }
@@ -15,7 +16,7 @@ namespace BookingSystem.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Insurance> Insurances { get; set; }
-        public DbSet<Assistance> Assistances { get; set; }
+        public DbSet<Assistance> AssistanceRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,15 +46,12 @@ namespace BookingSystem.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
 
-            //modelBuilder.Entity<Insurance>()
-            //    .HasOne(i => i.Booking)
-            //    .WithMany(b => b.Insurances)
-            //    .HasForeignKey(i => i.BookingID)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
-
-
-
+            // Define the one-to-many relationship between Booking and Insurance
+            modelBuilder.Entity<Insurance>()
+                .HasOne(i => i.Booking) // An Insurance belongs to one Booking
+                .WithMany(b => b.Insurances) // A Booking can have many Insurances
+                .HasForeignKey(i => i.BookingID)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes
 
 
             modelBuilder.Entity<Assistance>()

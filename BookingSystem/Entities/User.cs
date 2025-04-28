@@ -23,7 +23,7 @@ namespace BookingSystem.Entities
 
         [Required]
         public string Role { get; set; } // "Admin", "TravelAgent", "Customer"
-
+        [Required]
         public string ContactNumber { get; set; }
 
         // Navigation properties
@@ -32,9 +32,6 @@ namespace BookingSystem.Entities
         public ICollection<Insurance>? Insurances { get; set; }
         public ICollection<Assistance>? Assistances { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id:{UserID}, Name:{Name}, Email:{Email},Role:{Role} ";
-        }
+      
     }
 }

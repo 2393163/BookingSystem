@@ -8,7 +8,7 @@ namespace BookingSystem.DTOs
         public long UserID { get; set; }
         public string CoverageDetails { get; set; }
         public string Provider { get; set; }
-        public string Status { get; set; } = "Active";
+        public string Status { get; set; }
 
     }
 }

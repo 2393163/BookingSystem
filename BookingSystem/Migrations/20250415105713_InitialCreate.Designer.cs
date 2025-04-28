@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingSystem.Migrations
 {
     [DbContext(typeof(CombinedDbContext))]
-    [Migration("20250404051040_InitialCreate")]
+    [Migration("20250415105713_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,6 +35,7 @@ namespace BookingSystem.Migrations
 
                     b.Property<string>("IssueDescription")
                         .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ResolutionTime")
@@ -42,7 +43,8 @@ namespace BookingSystem.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<long>("UserID")
                         .HasColumnType("bigint");
@@ -51,16 +53,16 @@ namespace BookingSystem.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Assistances");
+                    b.ToTable("AssistanceRequests");
                 });
 
             modelBuilder.Entity("BookingSystem.Entities.Booking", b =>
                 {
-                    b.Property<int>("BookingID")
+                    b.Property<long>("BookingID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BookingID"));
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -68,15 +70,16 @@ namespace BookingSystem.Migrations
                     b.Property<int>("PackageID")
                         .HasColumnType("int");
 
-                    b.Property<int>("PaymentID")
-                        .HasColumnType("int");
+                    b.Property<long>("PaymentID")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<long>("UserID")
                         .HasColumnType("bigint");
@@ -92,31 +95,36 @@ namespace BookingSystem.Migrations
 
             modelBuilder.Entity("BookingSystem.Entities.Insurance", b =>
                 {
-                    b.Property<int>("InsuranceID")
+                    b.Property<long>("InsuranceID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InsuranceID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("InsuranceID"));
+
+                    b.Property<long>("BookingID")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("CoverageDetails")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Provider")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("datetime2");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<long>("UserID")
                         .HasColumnType("bigint");
 
                     b.HasKey("InsuranceID");
+
+                    b.HasIndex("BookingID");
 
                     b.HasIndex("UserID");
 
@@ -142,7 +150,6 @@ namespace BookingSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Duration")
-                        .HasMaxLength(5000)
                         .HasColumnType("int");
 
                     b.Property<string>("IncludedServices")
@@ -151,7 +158,6 @@ namespace BookingSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Price")
-                        .HasMaxLength(5000)
                         .HasColumnType("bigint");
 
                     b.Property<string>("Title")
@@ -175,16 +181,18 @@ namespace BookingSystem.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("BookingID")
-                        .HasColumnType("int");
+                    b.Property<long>("BookingID")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<long>("UserID")
                         .HasColumnType("bigint");
@@ -207,7 +215,17 @@ namespace BookingSystem.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("FlightReview")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FoodReview")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HotelReview")
+                        .HasColumnType("int");
 
                     b.Property<int>("PackageID")
                         .HasColumnType("int");
@@ -217,6 +235,9 @@ namespace BookingSystem.Migrations
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("TravelAgentReview")
+                        .HasColumnType("int");
 
                     b.Property<long>("UserID")
                         .HasColumnType("bigint");
@@ -296,11 +317,19 @@ namespace BookingSystem.Migrations
 
             modelBuilder.Entity("BookingSystem.Entities.Insurance", b =>
                 {
+                    b.HasOne("BookingSystem.Entities.Booking", "Booking")
+                        .WithMany("Insurances")
+                        .HasForeignKey("BookingID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BookingSystem.Entities.User", "User")
                         .WithMany("Insurances")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Booking");
 
                     b.Navigation("User");
                 });
@@ -337,8 +366,9 @@ namespace BookingSystem.Migrations
 
             modelBuilder.Entity("BookingSystem.Entities.Booking", b =>
                 {
-                    b.Navigation("Payment")
-                        .IsRequired();
+                    b.Navigation("Insurances");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("BookingSystem.Entities.Package", b =>

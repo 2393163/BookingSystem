@@ -30,6 +30,6 @@ namespace BookingSystem.Entities
 
         // Navigation properties
         public ICollection<Booking>? Bookings { get; set; }
-        public ICollection<Review>? Reviews { get; set; }
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }

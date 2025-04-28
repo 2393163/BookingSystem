@@ -19,8 +19,8 @@ namespace BookingSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
-                    Duration = table.Column<int>(type: "int", maxLength: 5000, nullable: false),
-                    Price = table.Column<long>(type: "bigint", maxLength: 5000, nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<long>(type: "bigint", nullable: false),
                     IncludedServices = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false)
                 },
@@ -47,21 +47,21 @@ namespace BookingSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Assistances",
+                name: "AssistanceRequests",
                 columns: table => new
                 {
                     RequestID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<long>(type: "bigint", nullable: false),
-                    IssueDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IssueDescription = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ResolutionTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Assistances", x => x.RequestID);
+                    table.PrimaryKey("PK_AssistanceRequests", x => x.RequestID);
                     table.ForeignKey(
-                        name: "FK_Assistances_Users_UserID",
+                        name: "FK_AssistanceRequests_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
@@ -72,14 +72,14 @@ namespace BookingSystem.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    BookingID = table.Column<int>(type: "int", nullable: false)
+                    BookingID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<long>(type: "bigint", nullable: false),
                     PackageID = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PaymentID = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PaymentID = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,29 +99,6 @@ namespace BookingSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Insurances",
-                columns: table => new
-                {
-                    InsuranceID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<long>(type: "bigint", nullable: false),
-                    CoverageDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Insurances", x => x.InsuranceID);
-                    table.ForeignKey(
-                        name: "FK_Insurances_Users_UserID",
-                        column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Review",
                 columns: table => new
                 {
@@ -130,8 +107,12 @@ namespace BookingSystem.Migrations
                     UserID = table.Column<long>(type: "bigint", nullable: false),
                     PackageID = table.Column<int>(type: "int", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FoodReview = table.Column<int>(type: "int", nullable: false),
+                    FlightReview = table.Column<int>(type: "int", nullable: false),
+                    HotelReview = table.Column<int>(type: "int", nullable: false),
+                    TravelAgentReview = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,16 +132,45 @@ namespace BookingSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Insurances",
+                columns: table => new
+                {
+                    InsuranceID = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<long>(type: "bigint", nullable: false),
+                    BookingID = table.Column<long>(type: "bigint", nullable: false),
+                    CoverageDetails = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Provider = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Insurances", x => x.InsuranceID);
+                    table.ForeignKey(
+                        name: "FK_Insurances_Bookings_BookingID",
+                        column: x => x.BookingID,
+                        principalTable: "Bookings",
+                        principalColumn: "BookingID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Insurances_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
                     PaymentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<long>(type: "bigint", nullable: false),
-                    BookingID = table.Column<int>(type: "int", nullable: false),
+                    BookingID = table.Column<long>(type: "bigint", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,8 +184,8 @@ namespace BookingSystem.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assistances_UserID",
-                table: "Assistances",
+                name: "IX_AssistanceRequests_UserID",
+                table: "AssistanceRequests",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
@@ -187,6 +197,11 @@ namespace BookingSystem.Migrations
                 name: "IX_Bookings_UserID",
                 table: "Bookings",
                 column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Insurances_BookingID",
+                table: "Insurances",
+                column: "BookingID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Insurances_UserID",
@@ -214,7 +229,7 @@ namespace BookingSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Assistances");
+                name: "AssistanceRequests");
 
             migrationBuilder.DropTable(
                 name: "Insurances");

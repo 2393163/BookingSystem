@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using BookingSystem.Entities;
 using BookingSystem.Repository;
 using BookingSystem.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace BookingSystem.Controllers
 {
@@ -11,23 +13,26 @@ namespace BookingSystem.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(UserRepository userRepository)
+        public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")] //by admin
         public async Task<ActionResult> GetUsers()
         {
             return Ok(await _userRepository.GetAllUsers());
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")] //by admin
+
         public async Task<ActionResult> GetUser(long id)
         {
-            var user = await _userRepository.GetUserByEmail(id.ToString());
+            var user = await _userRepository.GetUserById(id);
             if (user == null)
             {
                 return NotFound();
@@ -36,58 +41,72 @@ namespace BookingSystem.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] UserDTO newUser)
-        {
-            if (newUser == null)
-            {
-                return BadRequest("User is null.");
-            }
-
-            var user = new User
-            {
-                UserID = newUser.UserID,
-                Name = newUser.Name,
-                Email = newUser.Email,
-                Password = newUser.Password,
-                Role = newUser.Role,
-                ContactNumber = newUser.ContactNumber
-            };
-
-            await _userRepository.AddUsers(user);
-            return Ok(new { message = "User registered successfully as Customer" });
-        }
-
-
-
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(long id, [FromBody] UserDTO updatedUser)
         {
-            if (updatedUser == null || updatedUser.UserID != id)
+            var loggedInUserIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(loggedInUserIdClaim))
             {
-                return BadRequest("User data is invalid.");
+                return Unauthorized("User ID claim not found");
             }
 
-            var user = new User
+            if (!long.TryParse(loggedInUserIdClaim, out var loggedInUserId))
             {
-                UserID = updatedUser.UserID,
-                Name = updatedUser.Name,
-                Email = updatedUser.Email,
-                Password = updatedUser.Password,
-                Role = updatedUser.Role,
-                ContactNumber = updatedUser.ContactNumber
-            };
+                return Unauthorized("Invalid User ID claim");
+            }
 
-            await _userRepository.UpdateUser(user.UserID,user.Name,user.Email,user.ContactNumber);
-            return NoContent();
+            if (User.IsInRole("Admin") || loggedInUserId == id)
+            {
+                await _userRepository.UpdateUser(updatedUser.UserID,updatedUser.Name,updatedUser.Email,updatedUser.ContactNumber);
+                return Ok("User updated successfully");
+            }
+
+            return Forbid();
         }
 
         [HttpDelete("{id}")]
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(long id)
         {
             await _userRepository.DeleteUser(id);
             return NoContent();
         }
+
+
+
+        [Authorize(Roles = "Admin")] //only admin
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUser([FromQuery] string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return BadRequest("Invalid user data");
+
+            var users = await _userRepository.GetUsersByName(name);
+            if (users == null || users.Count == 0)
+                return NotFound($"No users found with name '{name}'");
+
+            return Ok(users);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/total-users")]
+        public async Task<IActionResult> GetTotalUsers()
+        {
+            var totalUsers = await _userRepository.GetTotalUsers();
+            return Ok(new { TotalUsers = totalUsers });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/users-by-role")]
+        public async Task<IActionResult> GetUsersByRole([FromQuery] string role)
+        {
+            if (string.IsNullOrEmpty(role)) return BadRequest("Role is required.");
+
+            var users = await _userRepository.GetUsersByRole(role);
+            return Ok(users);
+        }
+
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookingSystem.Entities;
 using BookingSystem.Repository;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using BookingSystem.DTOs;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingSystem.Controllers
 {
@@ -11,79 +13,105 @@ namespace BookingSystem.Controllers
     [ApiController]
     public class InsuranceController : ControllerBase
     {
-        private readonly InsuranceRepository _insuranceRepository;
+        private readonly IInsuranceRepository _insuranceRepository;
 
-        public InsuranceController()
+        public InsuranceController(IInsuranceRepository insuranceRepository)
         {
-            _insuranceRepository = new InsuranceRepository();
+            _insuranceRepository = insuranceRepository;
         }
 
         [HttpPost]
-        [HttpPost]
-        public async Task<IActionResult> AddInsurance([FromBody] InsuranceDTO newInsurance)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddInsurance([FromBody] InsuranceDTO insuranceDto)
         {
-            if (newInsurance == null)
+            if (insuranceDto == null)
             {
-                return BadRequest("Insurance is null.");
+                return BadRequest("Insurance data is null.");
             }
 
-            var insurance = new Insurance
+            try
             {
-                InsuranceID = newInsurance.InsuranceID,
-                UserID = newInsurance.UserID,
-                CoverageDetails = newInsurance.CoverageDetails,
-                Provider=newInsurance.Provider,
-                Status=newInsurance.Status
-            };
-
-            await _insuranceRepository.AddInsuranceAsync(insurance);
-            return Ok(newInsurance);
+                var insurance = await _insuranceRepository.AddInsuranceAsync(insuranceDto.UserID, insuranceDto.InsuranceID);
+                var result = new InsuranceDTO
+                {
+                    InsuranceID = insurance.InsuranceID,
+                    UserID = insurance.UserID,
+                    CoverageDetails = insurance.CoverageDetails,
+                    Provider = insurance.Provider,
+                    Status = insurance.Status
+                };
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
         [HttpGet]
-        public async Task<ActionResult<List<Insurance>>> GetAllInsurances()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<InsuranceDTO>>> GetAllInsurances()
         {
             var insurances = await _insuranceRepository.GetAllInsurancesAsync();
-            return Ok(insurances);
+            var result = insurances.Select(i => new InsuranceDTO
+            {
+                InsuranceID = (int)i.InsuranceID,
+                UserID = i.UserID,
+                CoverageDetails = i.CoverageDetails,
+                Provider = i.Provider,
+                Status = i.Status
+            }).ToList();
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Insurance>> GetInsuranceById(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<InsuranceDTO>> GetInsuranceById(long id)
         {
-            var insurance = await _insuranceRepository.GetAllInsurancesAsync();
-            var insuranceItem = insurance.FirstOrDefault(i => i.InsuranceID == id);
+            var insurances = await _insuranceRepository.GetAllInsurancesAsync();
+            var insurance = insurances.FirstOrDefault(i => i.InsuranceID == id);
 
-            if (insuranceItem == null)
+            if (insurance == null)
             {
-                return NotFound();
+                return NotFound("Insurance not found.");
             }
 
-            return Ok(insuranceItem);
-        }
-
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateInsurance(int id, [FromBody] InsuranceDTO updatedInsurance)
-        {
-            if (updatedInsurance == null || updatedInsurance.InsuranceID != id)
+            var result = new InsuranceDTO
             {
-                return BadRequest("Insurance data is invalid.");
-            }
-
-            var insurance = new Insurance
-            {
-                InsuranceID = updatedInsurance.InsuranceID,
-                UserID = updatedInsurance.UserID,
-                CoverageDetails = updatedInsurance.CoverageDetails,
+                InsuranceID = (int)insurance.InsuranceID,
+                UserID = insurance.UserID,
+                CoverageDetails = insurance.CoverageDetails,
+                Provider = insurance.Provider,
+                Status = insurance.Status
             };
 
-            await _insuranceRepository.UpdateInsuranceAsync(insurance.InsuranceID,insurance.CoverageDetails);
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateInsuranceStatus(long id, [FromBody] InsuranceDTO insuranceDto)
+        {
+            if (insuranceDto == null || insuranceDto.InsuranceID != id)
+            {
+                return BadRequest("Invalid insurance data.");
+            }
+
+            var updatedInsurance = await _insuranceRepository.UpdateInsuranceStatusAsync(id, insuranceDto.Status);
+            if (updatedInsurance == null)
+            {
+                return NotFound("Insurance not found.");
+            }
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInsurance(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteInsurance(long id)
         {
-            await _insuranceRepository.DeleteInsuranceAsync(id);
+            await _insuranceRepository.DeleteInsuranceAsync((int)id);
             return NoContent();
         }
     }

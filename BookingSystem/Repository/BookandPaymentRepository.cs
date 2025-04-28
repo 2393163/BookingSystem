@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.Repository
 {
-    public class BookandPaymentRepository
+    public class BookandPaymentRepository:IBookandPaymentRepository
     {
         public async Task AddBookingAsync(Booking booking)
         {
@@ -17,45 +17,79 @@ namespace BookingSystem.Repository
                 await context.SaveChangesAsync();
             }
         }
-
         public async Task<List<Booking>> GetAllBookingsAsync()
         {
             using (var context = new CombinedDbContext())
             {
-                return await context.Bookings.ToListAsync();
+                var bookings = await context.Bookings.ToListAsync<Booking>();
+                return bookings;
             }
         }
-
+        public async Task<List<Booking>> GetUpcomingBookings()
+        {
+            using (var context = new CombinedDbContext())
+            {
+                var bookings = await context.Bookings.Where(b => b.StartDate > DateTime.Now).ToListAsync();
+                return bookings;
+            }
+        }
         public async Task<List<Booking>> GetBookingsByBookingIDAsync(int BookingID)
         {
             using (var context = new CombinedDbContext())
             {
-                return await context.Bookings.Where(a => a.BookingID == BookingID).ToListAsync();
+                var bookings = await context.Bookings.Where(a => a.BookingID == BookingID).ToListAsync();
+                return bookings;
             }
         }
-
-        public async Task UpdateBookingAsync(int BookingID, DateTime StartDate)
+        public async Task<List<Booking>> GetBookingsByUserID(int UserID)
         {
             using (var context = new CombinedDbContext())
             {
-                var booking = await context.Bookings.FindAsync(BookingID);
-                if (booking != null)
+                var bookings = await context.Bookings.Where(a => a.UserID == UserID).ToListAsync();
+                return bookings;
+            }
+        }
+        public async Task UpdateBookingAsync(long BookingID, DateTime StartDate)
+        {
+            using (var context = new CombinedDbContext())
+            {
+                var user = context.Bookings.Find(BookingID);
+                if (user != null)
                 {
-                    booking.StartDate = StartDate;
+                    user.StartDate = StartDate;
                     await context.SaveChangesAsync();
                 }
             }
         }
-
-        public async Task DeleteBookingAsync(int BookingID)
+        public async Task CancelBooking(int BookingID)
         {
             using (var context = new CombinedDbContext())
             {
                 var booking = await context.Bookings.FindAsync(BookingID);
                 if (booking != null)
                 {
-                    context.Bookings.Remove(booking);
+                    booking.Status = "Cancelled";
                     await context.SaveChangesAsync();
+                }
+            }
+        }
+        public async Task<List<Booking>> GetBookingsByDateRange(DateTime startDate, DateTime endDate)
+        {
+            using (var context = new CombinedDbContext())
+            {
+                var bookings = await context.Bookings.Where(b => b.StartDate >= startDate && b.EndDate <= endDate).ToListAsync();
+                return bookings;
+            }
+        }
+        public async Task DeleteBookingAsync(int BookingID)
+        {
+            using (var dbContext = new CombinedDbContext())
+            {
+                var user = dbContext.Bookings.Find(BookingID);
+                if (user != null)
+                {
+                    dbContext.Bookings.Remove(user);
+                    await dbContext.SaveChangesAsync();
                 }
             }
         }

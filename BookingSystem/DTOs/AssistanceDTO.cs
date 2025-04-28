@@ -2,9 +2,11 @@
 {
     public class AssistanceDTO
     {
-        public int AssistanceID { get; set; }
+        public int RequestID { get; set; }
         public long UserID { get; set; }
-        public string AssistanceType { get; set; }
-        public string Description { get; set; }
+        public string Status { get; set; }
+        public string IssueDescription { get; set; }
+        public DateTime ResolutionTime { get; set; }
+
     }
 }

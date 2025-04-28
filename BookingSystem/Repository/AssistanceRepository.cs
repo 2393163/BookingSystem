@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.Repository
 {
-    public class AssistanceRepository
+    public class AssistanceRepository : IAssistanceRepository
     {
         public async Task AddAssistanceRequestAsync(Assistance newAssistanceRequest)
         {
             using (var context = new CombinedDbContext())
             {
-                await context.Assistances.AddAsync(newAssistanceRequest);
+                await context.AssistanceRequests.AddAsync(newAssistanceRequest);
                 await context.SaveChangesAsync();
             }
         }
@@ -22,7 +22,7 @@ namespace BookingSystem.Repository
         {
             using (var context = new CombinedDbContext())
             {
-                return await context.Assistances.ToListAsync();
+                return await context.AssistanceRequests.ToListAsync();
             }
         }
 
@@ -30,7 +30,7 @@ namespace BookingSystem.Repository
         {
             using (var context = new CombinedDbContext())
             {
-                var assistanceRequest = await context.Assistances.FindAsync(RequestID);
+                var assistanceRequest = await context.AssistanceRequests.FindAsync(RequestID);
                 if (assistanceRequest != null)
                 {
                     assistanceRequest.IssueDescription = IssueDescription;
@@ -43,12 +43,21 @@ namespace BookingSystem.Repository
         {
             using (var context = new CombinedDbContext())
             {
-                var assistanceRequest = await context.Assistances.FindAsync(RequestID);
+                var assistanceRequest = await context.AssistanceRequests.FindAsync(RequestID);
                 if (assistanceRequest != null)
                 {
-                    context.Assistances.Remove(assistanceRequest);
+                    context.AssistanceRequests.Remove(assistanceRequest);
                     await context.SaveChangesAsync();
                 }
+            }
+        }
+        public async Task<IEnumerable<Assistance>> GetRequestsByUserIdAsync(long userId)
+        {
+            using (var context = new CombinedDbContext())
+            {
+                return await context.AssistanceRequests
+                .Where(r => r.UserID == userId)
+                .ToListAsync();
             }
         }
     }

@@ -4,101 +4,198 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Data;
 using BookingSystem.Entities;
+using System.Buffers.Text;
+using System.Text.RegularExpressions;
+
 
 namespace BookingSystem.Repository
 {
-    public class PackageRepository
+    public class PackageRepository : IPackageRepository
     {
-        private readonly CombinedDbContext _context;
-
-        public PackageRepository(CombinedDbContext context)
-        {
-            _context = context;
-        }
 
         public async Task AddPackagesAsync(Package newpackage)
         {
-            await _context.Packages.AddAsync(newpackage);
-            await _context.SaveChangesAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                await _context.Packages.AddAsync(newpackage);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<List<Package>> GetAllPackagesAsync()
         {
-            return await _context.Packages.ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByTitleAsync(string title)
+
         {
-            return await _context.Packages.Where(a => a.Title == title).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(a => a.Title == title).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByPackageIdAsync(int packageid)
+
         {
-            return await _context.Packages.Where(a => a.PackageID == packageid).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(a => a.PackageID == packageid).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByPriceRangeAsync(long minPrice, long maxPrice)
         {
-            return await _context.Packages.Where(p => p.Price >= minPrice && p.Price <= maxPrice).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(p => p.Price >= minPrice && p.Price <= maxPrice).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByDurationAsync(int duration)
         {
-            return await _context.Packages.Where(a => a.Duration == duration).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(a => a.Duration == duration).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByPriceAsync(long price)
         {
-            return await _context.Packages.Where(a => a.Price == price).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(a => a.Price == price).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByCategoryAsync(string category)
         {
-            return await _context.Packages.Where(a => a.Category == category).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(a => a.Category == category).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByPriceDurationTitleAsync(long price, int duration, string title)
         {
-            return await _context.Packages.Where(p => p.Price <= price && p.Duration == duration && p.Title.Contains(title)).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(p => p.Price <= price && p.Duration == duration && p.Title.Contains(title)).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByPriceDurationAsync(long price, int duration)
         {
-            return await _context.Packages.Where(p => p.Price == price && p.Duration == duration).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(p => p.Price == price && p.Duration == duration).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByIncludedServicesAsync(string includedservices)
         {
-            return await _context.Packages.Where(p => p.IncludedServices.Contains(includedservices)).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(p => p.IncludedServices.Contains(includedservices)).ToListAsync();
+            }
         }
 
         public async Task<List<Package>> GetPackageByDescriptionAsync(string description)
         {
-            return await _context.Packages.Where(p => p.Description.Contains(description)).ToListAsync();
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(p => p.Description.Contains(description)).ToListAsync();
+            }
         }
 
         public async Task UpdatePackageAsync(int PackageID, string Title, string Description, int Duration, long Price, string IncludedServices)
         {
-            var package = await _context.Packages.FindAsync(PackageID);
-            if (package != null)
+            using (var _context = new CombinedDbContext())
             {
-                package.Title = Title;
-                package.Duration = Duration;
-                package.Description = Description;
-                package.Price = Price;
-                package.IncludedServices = IncludedServices;
-                await _context.SaveChangesAsync();
+                var package = await _context.Packages.FindAsync(PackageID);
+                if (package != null)
+                {
+                    package.Title = Title;
+                    package.Duration = Duration;
+                    package.Description = Description;
+                    package.Price = Price;
+                    package.IncludedServices = IncludedServices;
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 
         public async Task DeletePackageAsync(int PackageId)
         {
-            var package = await _context.Packages.FindAsync(PackageId);
-            if (package != null)
+            using (var _context = new CombinedDbContext())
             {
-                _context.Packages.Remove(package);
-                await _context.SaveChangesAsync();
+                var package = await _context.Packages.FindAsync(PackageId);
+                if (package != null)
+                {
+                    _context.Packages.Remove(package);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
+        // Method to fetch packages based on the number of bookings
+        public async Task<IEnumerable<Package>> GetPackagesByBookingsAsync()
+        {
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages
+                .Include(p => p.Bookings)
+                .OrderByDescending(p => p.Bookings.Count)
+                .ToListAsync();
+            }
+        }
+
+        // Method to fetch packages based on average rating
+        public async Task<IEnumerable<Package>> GetPackagesByRatingAsync()
+        {
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages
+                .Include(p => p.Reviews)
+                .Select(p => new
+                {
+                    Package = p,
+                    AverageRating = p.Reviews.Any() ? p.Reviews.Average(r => r.Rating) : 0
+                })
+                .OrderByDescending(p => p.AverageRating)
+                .Select(p => p.Package)
+                .ToListAsync();
+            }
+        }
+
+
+        // Method to fetch packages based on the number of reviews
+        public async Task<IEnumerable<Package>> GetPackagesByReviewCountAsync()
+        {
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages
+                .Include(p => p.Reviews)
+                .OrderByDescending(p => p.Reviews.Count)
+                .ToListAsync();
+            }
+        }
+
+        // Method to fetch packages based on recent reviews
+        public async Task<IEnumerable<Package>> GetPackagesByRecentReviewsAsync()
+        {
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages
+                .Include(p => p.Reviews)
+                .OrderByDescending(p => p.Reviews.Max(r => r.TimeStamp))
+                .ToListAsync();
+            }
+        }
+
+
     }
 }

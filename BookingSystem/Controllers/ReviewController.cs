@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BookingSystem.Entities;
 using BookingSystem.Repository;
 using BookingSystem.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingSystem.Controllers
 {
@@ -11,21 +12,23 @@ namespace BookingSystem.Controllers
     [ApiController]
     public class ReviewController : ControllerBase
     {
-        private readonly ReviewRepository _reviewRepository;
+        private readonly IReviewRepository _reviewRepository;
 
-        public ReviewController(ReviewRepository reviewRepository)
+        public ReviewController(IReviewRepository reviewRepository)
         {
             _reviewRepository = reviewRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Review>>> GetReviews()
+        public async Task<ActionResult> GetReviews()
         {
             return Ok(await _reviewRepository.GetAllReviewsAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Review>> GetReview(int id)
+        [Authorize(Roles = "Travel Agent, Admin")]
+
+        public async Task<ActionResult> GetReview(int id)
         {
             var review = await _reviewRepository.GetReviewByIdAsync(id);
             if (review == null)
@@ -36,7 +39,8 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddReview(string email,[FromBody] ReviewDTO newReview)
+        [Authorize]
+        public async Task<IActionResult> AddReview([FromBody] ReviewDTO newReview)
         {
             if (newReview == null)
             {
@@ -49,31 +53,132 @@ namespace BookingSystem.Controllers
                 UserID = newReview.UserID,
                 PackageID = newReview.PackageID,
                 Comment = newReview.Comment,
-                Rating = newReview.Rating
+                Rating = newReview.Rating,
+                TimeStamp = newReview.TimeStamp,
+                FoodReview= newReview.FoodReview,
+                FlightReview = newReview.FlightReview,
+                HotelReview = newReview.HotelReview,
+                TravelAgentReview = newReview.TravelAgentReview
             };
 
-            await _reviewRepository.AddReviewAsync(email,review);
+            await _reviewRepository.AddReviewAsync(review);
             return Ok(review);
         }
 
 
         [HttpPut("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> PutReview(int id, Review review)
         {
-            if (id != review.ReviewID)
+            if (id != review.UserID)
             {
                 return BadRequest();
             }
 
-            await _reviewRepository.UpdateReviewAsync(id, review.Rating, review.Comment, review.TimeStamp);
+
+            await _reviewRepository.UpdateReviewAsync(id, review.Rating, review.Comment, review.TimeStamp, review.FoodReview, review.FlightReview, review.HotelReview, review.TravelAgentReview);
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteReview(int id)
         {
             await _reviewRepository.DeleteReviewAsync(id);
             return NoContent();
         }
+
+
+
+        [HttpGet("count")]
+        [Authorize]
+        public async Task<ActionResult<int>> GetReviewCount()
+        {
+            return Ok(await _reviewRepository.ReviewCountAsync());
+        }
+
+        [HttpGet("package/{packageID}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByPackageID(int packageID)
+        {
+            return Ok(await _reviewRepository.FetchReviewsByPackageIDAsync(packageID));
+        }
+
+        [HttpGet("user/{userID}")]
+        [Authorize(Roles = "Travel Agent, Admin")]
+        public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByUser(int userID)
+        {
+            return Ok(await _reviewRepository.FetchReviewsByUserAsync(userID));
+        }
+
+        [HttpGet("rating/{rating}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByRating(int rating)
+        {
+            return Ok(await _reviewRepository.FetchReviewsByRatingAsync(rating));
+        }
+
+        [HttpGet("recent/{count}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Review>>> GetRecentReviews(int count)
+        {
+            return Ok(await _reviewRepository.FetchRecentReviewsAsync(count));
+        }
+
+        [HttpGet("top-rated/{count}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Review>>> GetTopRatedReviews(int count)
+        {
+            return Ok(await _reviewRepository.FetchTopRatedReviewsAsync(count));
+        }
+
+        [HttpGet("average-rating/{packageID}")]
+        [Authorize]
+        public async Task<ActionResult<double>> GetAverageRating(int packageID)
+        {
+            return Ok(await _reviewRepository.FetchAverageRatingAsync(packageID));
+        }
+
+        [HttpGet("keyword/{keyword}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByKeyword(string keyword)
+        {
+            return Ok(await _reviewRepository.FetchReviewsByKeywordAsync(keyword));
+        }
+
+        [HttpGet("top-rated-food")]
+        public async Task<ActionResult<List<Review>>> GetTopRatedFoodReviews(int count)
+        {
+            var reviews = await _reviewRepository.FetchTopRatedFoodReviewsAsync(count);
+            return Ok(reviews);
+        }
+
+        [HttpGet("top-rated-hotel")]
+        public async Task<ActionResult<List<Review>>> GetTopRatedHotelReviews(int count)
+        {
+            var reviews = await _reviewRepository.FetchTopRatedHotelReviewsAsync(count);
+            return Ok(reviews);
+        }
+
+        [HttpGet("top-rated-flight")]
+        public async Task<ActionResult<List<Review>>> GetTopRatedFlightReviews(int count)
+        {
+            var reviews = await _reviewRepository.FetchTopRatedFlightReviewsAsync(count);
+            return Ok(reviews);
+        }
+
+        [HttpGet("top-rated-travel-agent")]
+        public async Task<ActionResult<List<Review>>> GetTopRatedTravelAgentReviews(int count)
+        {
+            var reviews = await _reviewRepository.FetchTopRatedTravelAgentReviewsAsync(count);
+            return Ok(reviews);
+        }
+
+
+
+
+
     }
 }

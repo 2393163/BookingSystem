@@ -7,8 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.Repository
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
+        
+        
         public async Task<User> ValidateUser(string email, string password)
         {
             using (var context = new CombinedDbContext())
@@ -70,11 +72,11 @@ namespace BookingSystem.Repository
             }
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<User> GetUserById(long id)
         {
             using (var context = new CombinedDbContext())
             {
-                return await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                return await context.Users.FirstOrDefaultAsync(u => u.UserID == id);
             }
         }
 

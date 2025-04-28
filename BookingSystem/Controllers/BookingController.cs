@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BookingSystem.Entities;
 using BookingSystem.Repository;
 using BookingSystem.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingSystem.Controllers
 {
@@ -11,23 +13,26 @@ namespace BookingSystem.Controllers
     [ApiController]
     public class BookingController : ControllerBase
     {
-        private readonly BookandPaymentRepository _bookandPaymentRepository;
+        private readonly IBookandPaymentRepository _bookandPaymentRepository;
 
-        public BookingController(BookandPaymentRepository bookandPaymentRepository)
+        public BookingController(IBookandPaymentRepository bookandPaymentRepository)
         {
             _bookandPaymentRepository = bookandPaymentRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
+        [Authorize(Roles = "Travel Agent, Admin")]
+        public async Task<IActionResult> GetBookings()
         {
-            return Ok(await _bookandPaymentRepository.GetAllBookingsAsync());
+            var bookings = await _bookandPaymentRepository.GetAllBookingsAsync();
+            return Ok(bookings);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Booking>> GetBooking(int id)
+        [Authorize(Roles = "Travel Agent, Admin")]
+        public async Task<IActionResult> GetBooking(int id)
         {
-            var booking = await _bookandPaymentRepository.GetBookingsByBookingIDAsync(id);
+            var booking = (await _bookandPaymentRepository.GetBookingsByBookingIDAsync(id)).FirstOrDefault();
             if (booking == null)
             {
                 return NotFound();
@@ -36,6 +41,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Travel Agent, Admin")]
         public async Task<IActionResult> AddBooking([FromBody] BookingDTO newBooking)
         {
             if (newBooking == null)
@@ -55,10 +61,11 @@ namespace BookingSystem.Controllers
             };
 
             await _bookandPaymentRepository.AddBookingAsync(booking);
-            return Ok(booking);
+            return CreatedAtAction(nameof(GetBooking), new { id = booking.BookingID }, booking);
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Travel Agent, Admin")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingDTO updatedBooking)
         {
             if (updatedBooking == null || updatedBooking.BookingID != id)
@@ -66,17 +73,12 @@ namespace BookingSystem.Controllers
                 return BadRequest("Booking data is invalid.");
             }
 
-            var booking = new Booking
-            {
-                StartDate = updatedBooking.StartDate,
-                            
-            };
-
-            await _bookandPaymentRepository.UpdateBookingAsync(booking.BookingID,booking.StartDate);
+            await _bookandPaymentRepository.UpdateBookingAsync(id, updatedBooking.StartDate);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Travel Agent, Admin")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             await _bookandPaymentRepository.DeleteBookingAsync(id);
