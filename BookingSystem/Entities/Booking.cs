@@ -8,7 +8,7 @@ namespace BookingSystem.Entities
     public class Booking
     {
         [Key]
-        public int BookingID { get; set; }
+        public long BookingID { get; set; }
         [Required(ErrorMessage = "Please provide the UserID.")]
         public long UserID { get; set; } // Removed [MaxLength] since it's not applicable to numeric types.
 

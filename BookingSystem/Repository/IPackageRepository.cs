@@ -37,21 +37,20 @@ namespace BookingSystem.Repository
 
         Task<List<Package>> GetPackageByIncludedServicesAsync(string includedServices);
 
-        Task<List<Package>> GetPackageByDescriptionAsync(string description);
+        Task<List<Package>> GetPackageByTravelagentAsync(int travelagent);
 
         Task UpdatePackageAsync(int packageId, string title, string description, int duration, long price, string includedServices);
 
         Task DeletePackageAsync(int packageId);
 
-        Task<IEnumerable<Package>> GetPackagesByRecentReviewsAsync();
+        Task<List<Package>> GetPackagesByRecentReviewsAsync();
 
-        Task<IEnumerable<Package>> GetPackagesByBookingsAsync();
+        Task<List<Package>> GetPackagesByBookingsAsync();
 
-        Task<IEnumerable<Package>> GetPackagesByRatingAsync();
+        Task<List<Package>> GetPackagesByRatingAsync();
 
-        Task<IEnumerable<Package>> GetPackagesByReviewCountAsync();
-
-
+        Task<List<Package>> GetPackagesByReviewCountAsync();
+       
     }
 
 }
