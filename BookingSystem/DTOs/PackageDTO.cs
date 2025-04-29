@@ -9,5 +9,6 @@
         public long Price { get; set; }
         public string IncludedServices { get; set; }
         public string Category { get; set; }
+        public int Travelagent { get; set; }
     }
 }

@@ -63,6 +63,13 @@ namespace BookingSystem.Repository
                 return await _context.Packages.Where(a => a.Duration == duration).ToListAsync();
             }
         }
+        public async Task<List<Package>> GetPackageByTravelagentAsync(int travelagent)
+        {
+            using (var _context = new CombinedDbContext())
+            {
+                return await _context.Packages.Where(a => a.Travelagent == travelagent ).ToListAsync();
+            }
+        }
 
         public async Task<List<Package>> GetPackageByPriceAsync(long price)
         {
@@ -96,6 +103,7 @@ namespace BookingSystem.Repository
             }
         }
 
+
         public async Task<List<Package>> GetPackageByIncludedServicesAsync(string includedservices)
         {
             using (var _context = new CombinedDbContext())
@@ -104,13 +112,7 @@ namespace BookingSystem.Repository
             }
         }
 
-        public async Task<List<Package>> GetPackageByDescriptionAsync(string description)
-        {
-            using (var _context = new CombinedDbContext())
-            {
-                return await _context.Packages.Where(p => p.Description.Contains(description)).ToListAsync();
-            }
-        }
+        
 
         public async Task UpdatePackageAsync(int PackageID, string Title, string Description, int Duration, long Price, string IncludedServices)
         {
@@ -142,7 +144,7 @@ namespace BookingSystem.Repository
             }
         }
         // Method to fetch packages based on the number of bookings
-        public async Task<IEnumerable<Package>> GetPackagesByBookingsAsync()
+        public async Task<List<Package>> GetPackagesByBookingsAsync()
         {
             using (var _context = new CombinedDbContext())
             {
@@ -154,7 +156,7 @@ namespace BookingSystem.Repository
         }
 
         // Method to fetch packages based on average rating
-        public async Task<IEnumerable<Package>> GetPackagesByRatingAsync()
+        public async Task<List<Package>> GetPackagesByRatingAsync()
         {
             using (var _context = new CombinedDbContext())
             {
@@ -173,7 +175,7 @@ namespace BookingSystem.Repository
 
 
         // Method to fetch packages based on the number of reviews
-        public async Task<IEnumerable<Package>> GetPackagesByReviewCountAsync()
+        public async Task<List<Package>> GetPackagesByReviewCountAsync()
         {
             using (var _context = new CombinedDbContext())
             {
@@ -185,7 +187,7 @@ namespace BookingSystem.Repository
         }
 
         // Method to fetch packages based on recent reviews
-        public async Task<IEnumerable<Package>> GetPackagesByRecentReviewsAsync()
+        public async Task<List<Package>> GetPackagesByRecentReviewsAsync()
         {
             using (var _context = new CombinedDbContext())
             {

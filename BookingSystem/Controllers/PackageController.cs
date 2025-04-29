@@ -37,6 +37,115 @@ namespace BookingSystem.Controllers
             }
             return Ok(package);
         }
+        [HttpGet("search/title")]
+        public async Task<IActionResult> GetPackageByTitleAsync([FromQuery] string title)
+        {
+            var packages = await _packageRepository.GetPackageByTitleAsync
+            (title);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+        [HttpGet("search/travelagent")]
+        public async Task<IActionResult> GetPackageByTravelagentAsync([FromQuery] int travelagent)
+        {
+            var packages = await _packageRepository.GetPackageByTravelagentAsync(travelagent);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+        [HttpGet("search")]
+        public async Task<IActionResult>
+        GetPackageByPriceDurationTitleAsync([FromQuery] long price,[FromQuery] int duration, [FromQuery] string title)
+        {
+            var packages = await
+            _packageRepository.GetPackageByPriceDurationTitleAsync
+            (price, duration, title);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+        [HttpGet("search/price-duration")]
+        public async Task<IActionResult> GetPackageByPriceDurationAsync
+        ([FromQuery] long price, [FromQuery] int duration)
+        {
+            var packages = await
+            _packageRepository.GetPackageByPriceDurationAsync(price,
+            duration);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+        [HttpGet("search/duration")]
+        public async Task<IActionResult> GetPackageByDurationAsync
+        ([FromQuery] int duration)
+        {
+            var packages = await
+            _packageRepository.GetPackageByDurationAsync(duration);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+
+        [HttpGet("search/price-range")]
+        public async Task<IActionResult> GetPackageByPriceRangeAsync([FromQuery] long minPrice, [FromQuery] long maxPrice)
+        {
+            var packages = await
+            _packageRepository.GetPackageByPriceRangeAsync(minPrice,
+            maxPrice);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+        [HttpGet("search/includedservices")]
+        public async Task<IActionResult> GetPackageByIncludedServicesAsync
+        ([FromQuery] string includedservices)
+        {
+            var packages = await
+            _packageRepository.GetPackageByIncludedServicesAsync
+            (includedservices);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+        [HttpGet("search/price")]
+        public async Task<IActionResult> GetPackageByPriceAsync([FromQuery] long price)
+        {
+            var packages = await _packageRepository.GetPackageByPriceAsync
+            (price);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+        [HttpGet("search/Category")]
+        public async Task<IActionResult> GetPackageByCategoryAsync([FromQuery] string category)
+        {
+            var packages = await
+            _packageRepository.GetPackageByCategoryAsync(category);
+            if (packages == null || !packages.Any())
+            {
+                return NotFound();
+            }
+            return Ok(packages);
+        }
+
+
 
         [HttpPost]
         [Authorize(Roles = "Admin,Travel Agent")]
@@ -87,6 +196,7 @@ namespace BookingSystem.Controllers
             await _packageRepository.UpdatePackageAsync(package.PackageID, package.Title, package.Description, package.Duration, package.Price, package.IncludedServices);
             return NoContent();
         }
+        
         [HttpDelete("{id}")]
         [Authorize(Roles = "Travel Agent, Admin")]
         public async Task<IActionResult> DeletePackage(int id)

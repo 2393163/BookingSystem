@@ -27,6 +27,8 @@ namespace BookingSystem.Entities
         [Required(ErrorMessage = "Please enter the Category")]
         [MaxLength(5000, ErrorMessage = "The Category must not exceed 5000 characters")]
         public string Category { get; set; }
+        [Required(ErrorMessage = "Please enter the TravelAgentNumber")]
+        public int Travelagent { get; set; }
 
         // Navigation properties
         public ICollection<Booking>? Bookings { get; set; }
