@@ -20,14 +20,14 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackages()
         {
             return Ok(await _packageRepository.GetAllPackagesAsync());
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackage(int id)
         {
             var package = await _packageRepository.GetPackageByPackageIdAsync(id);
@@ -38,7 +38,7 @@ namespace BookingSystem.Controllers
             return Ok(package);
         }
         [HttpGet("search/title")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByTitleAsync([FromQuery] string title)
         {
             var packages = await _packageRepository.GetPackageByTitleAsync
@@ -50,7 +50,7 @@ namespace BookingSystem.Controllers
             return Ok(packages);
         }
         [HttpGet("search/travelagent")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByTravelagentAsync([FromQuery] int travelagent)
         {
             var packages = await _packageRepository.GetPackageByTravelagentAsync(travelagent);
@@ -61,7 +61,7 @@ namespace BookingSystem.Controllers
             return Ok(packages);
         }
         [HttpGet("search")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult>
         GetPackageByPriceDurationTitleAsync([FromQuery] long price,[FromQuery] int duration, [FromQuery] string title)
         {
@@ -75,7 +75,7 @@ namespace BookingSystem.Controllers
             return Ok(packages);
         }
         [HttpGet("search/price-duration")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByPriceDurationAsync
         ([FromQuery] long price, [FromQuery] int duration)
         {
@@ -89,7 +89,7 @@ namespace BookingSystem.Controllers
             return Ok(packages);
         }
         [HttpGet("search/duration")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByDurationAsync
         ([FromQuery] int duration)
         {
@@ -103,7 +103,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet("search/price-range")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByPriceRangeAsync([FromQuery] long minPrice, [FromQuery] long maxPrice)
         {
             var packages = await
@@ -116,7 +116,7 @@ namespace BookingSystem.Controllers
             return Ok(packages);
         }
         [HttpGet("search/includedservices")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByIncludedServicesAsync
         ([FromQuery] string includedservices)
         {
@@ -130,7 +130,7 @@ namespace BookingSystem.Controllers
             return Ok(packages);
         }
         [HttpGet("search/price")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByPriceAsync([FromQuery] long price)
         {
             var packages = await _packageRepository.GetPackageByPriceAsync
@@ -142,7 +142,7 @@ namespace BookingSystem.Controllers
             return Ok(packages);
         }
         [HttpGet("search/Category")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackageByCategoryAsync([FromQuery] string category)
         {
             var packages = await
@@ -157,7 +157,7 @@ namespace BookingSystem.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Travel Agent")]
+        //[Authorize(Roles = "Admin,Travel Agent")]
         public async Task<IActionResult> AddPackage([FromBody] PackageDTO newPackage)
         {
             if (newPackage == null)
@@ -173,7 +173,8 @@ namespace BookingSystem.Controllers
                 Duration = newPackage.Duration,
                 Price = newPackage.Price,
                 IncludedServices = newPackage.IncludedServices,
-                Category = newPackage.Category
+                Category = newPackage.Category,
+                Travelagent = newPackage.Travelagent
             };
 
             await _packageRepository.AddPackagesAsync(package);
@@ -182,7 +183,7 @@ namespace BookingSystem.Controllers
 
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize(Roles = "Travel Agent, Admin")]
 
         public async Task<IActionResult> UpdatePackage(int id, [FromBody] PackageDTO updatedPackage)
         {
@@ -199,15 +200,18 @@ namespace BookingSystem.Controllers
                 Duration = updatedPackage.Duration,
                 Price = updatedPackage.Price,
                 IncludedServices = updatedPackage.IncludedServices,
-                Category = updatedPackage.Category
+                Category = updatedPackage.Category,
+                Travelagent = updatedPackage.Travelagent,
+                image=updatedPackage.image
+
             };
 
-            await _packageRepository.UpdatePackageAsync(package.PackageID, package.Title, package.Description, package.Duration, package.Price, package.IncludedServices);
-            return NoContent();
+            await _packageRepository.UpdatePackageAsync(package.PackageID, package.Title, package.Description, package.Duration, package.Price, package.IncludedServices,package.Travelagent,package.image);
+            return Ok (package);
         }
         
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize(Roles = "Travel Agent, Admin")]
         public async Task<IActionResult> DeletePackage(int id)
         {
             await _packageRepository.DeletePackageAsync(id);
@@ -215,7 +219,7 @@ namespace BookingSystem.Controllers
         }
         // Method to fetch packages based on the number of bookings
         [HttpGet("popular")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackagesByBookings()
         {
             var packages = await _packageRepository.GetPackagesByBookingsAsync();
@@ -224,7 +228,7 @@ namespace BookingSystem.Controllers
 
         // Method to fetch packages based on average rating
         [HttpGet("rating")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackagesByRating()
         {
             var packages = await
@@ -236,7 +240,7 @@ namespace BookingSystem.Controllers
 
         // Method to fetch packages based on recent reviews
         [HttpGet("reviews/recent")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackagesByRecentReviews()
         {
             var packages = await _packageRepository.GetPackagesByRecentReviewsAsync();
@@ -251,7 +255,7 @@ namespace BookingSystem.Controllers
         }
         // Get packages by review count
         [HttpGet("highest-review")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetPackagesByReviewCount()
         {
             var packages = await _packageRepository.GetPackagesByReviewCountAsync();

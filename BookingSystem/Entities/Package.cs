@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookingSystem.Entities
@@ -29,6 +30,9 @@ namespace BookingSystem.Entities
         public string Category { get; set; }
         [Required(ErrorMessage = "Please enter the TravelAgentNumber")]
         public int Travelagent { get; set; }
+        
+
+        public string image { get; set; }
 
         // Navigation properties
         public ICollection<Booking>? Bookings { get; set; }

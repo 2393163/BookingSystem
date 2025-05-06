@@ -114,7 +114,7 @@ namespace BookingSystem.Repository
 
         
 
-        public async Task UpdatePackageAsync(int PackageID, string Title, string Description, int Duration, long Price, string IncludedServices)
+        public async Task UpdatePackageAsync(int PackageID, string Title, string Description, int Duration, long Price, string IncludedServices,int Travelagent,string image )
         {
             using (var _context = new CombinedDbContext())
             {
@@ -126,6 +126,8 @@ namespace BookingSystem.Repository
                     package.Description = Description;
                     package.Price = Price;
                     package.IncludedServices = IncludedServices;
+                    package.Travelagent = Travelagent;
+                    package.image = image;
                     await _context.SaveChangesAsync();
                 }
             }

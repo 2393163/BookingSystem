@@ -61,6 +61,10 @@ namespace BookingSystem.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Add other configurations as needed
+            modelBuilder.Entity<Package>()
+                .Property(p => p.image)
+                .HasDefaultValue("https://via.placeholder.com/150");
+
         }
     }
 }

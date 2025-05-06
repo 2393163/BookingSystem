@@ -1,4 +1,4 @@
-
+﻿
 using BookingSystem.Data;
 using BookingSystem.Repository;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +36,16 @@ namespace BookingSystem
             builder.Services.AddScoped<IReviewRepository,ReviewRepository>(provider => new ReviewRepository(Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
-
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy.WithOrigins("*") // ✅ Allow your Angular app
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+            });
 
             //  Add JWT Authentication
 
@@ -113,6 +122,9 @@ namespace BookingSystem
             }
 
             app.UseHttpsRedirection();
+
+            //app.UseCors("AllowSpecificOrigins"); 
+            app.UseCors("AllowFrontend");
 
             app.UseAuthentication();
 

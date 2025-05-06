@@ -10,5 +10,6 @@
         public string IncludedServices { get; set; }
         public string Category { get; set; }
         public int Travelagent { get; set; }
+        public string image { get; set; }
     }
 }

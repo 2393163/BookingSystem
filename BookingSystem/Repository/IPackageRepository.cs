@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 using System.Collections.Generic;
 
@@ -39,7 +38,7 @@ namespace BookingSystem.Repository
 
         Task<List<Package>> GetPackageByTravelagentAsync(int travelagent);
 
-        Task UpdatePackageAsync(int packageId, string title, string description, int duration, long price, string includedServices);
+        Task UpdatePackageAsync(int packageId, string title, string description, int duration, long price, string includedServices,int Travelagent,string image);
 
         Task DeletePackageAsync(int packageId);
 
