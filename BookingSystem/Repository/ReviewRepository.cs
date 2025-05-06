@@ -409,7 +409,7 @@ namespace BookingSystem.Repository
         }
         #endregion
 
-        #region Fetch TopRated FlightReviews
+        #region Fetch TopRated HotelReviews
 
         public async Task<List<Review>> FetchTopRatedHotelReviewsAsync(int count)
         {

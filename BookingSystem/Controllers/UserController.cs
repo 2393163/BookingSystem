@@ -42,28 +42,45 @@ namespace BookingSystem.Controllers
 
 
         [Authorize]
+
         [HttpPut("{id}")]
+
         public async Task<IActionResult> UpdateUser(long id, [FromBody] UserDTO updatedUser)
+
         {
+
             var loggedInUserIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(loggedInUserIdClaim))
+
             {
+
                 return Unauthorized("User ID claim not found");
+
             }
 
             if (!long.TryParse(loggedInUserIdClaim, out var loggedInUserId))
+
             {
+
                 return Unauthorized("Invalid User ID claim");
+
             }
 
             if (User.IsInRole("Admin") || loggedInUserId == id)
+
             {
-                await _userRepository.UpdateUser(updatedUser.UserID,updatedUser.Name,updatedUser.Email,updatedUser.ContactNumber);
+
+                await _userRepository.UpdateUser(updatedUser.UserID, updatedUser.Name, updatedUser.Email, updatedUser.ContactNumber);
+
                 return Ok("User updated successfully");
+
             }
 
             return Forbid();
+
         }
+
 
         [HttpDelete("{id}")]
 
