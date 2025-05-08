@@ -18,7 +18,9 @@ namespace BookingSystem.Repository
         Task UpdateBookingAsync(long BookingID, DateTime StartDate);
 
         Task DeleteBookingAsync(int BookingID);
-        
+        Task CancelBooking(int BookingID);
+
+
 
     }
 }
