@@ -27,21 +27,21 @@ namespace BookingSystem.Entities
 
         //New properties for specific reviews
 
-        [Required(ErrorMessage = "Please provide a Rating.")]
+       // [Required(ErrorMessage = "Please provide a Rating.")]
         [Range(1, 5, ErrorMessage = "FoodRating must be between 1 and 5.")]
-        public int FoodReview { get; set; }
+        public int? FoodReview { get; set; }
 
-        [Required(ErrorMessage = "Please provide a Rating.")]
+       // [Required(ErrorMessage = "Please provide a Rating.")]
         [Range(1, 5, ErrorMessage = "FlightRating must be between 1 and 5.")]
-        public int FlightReview { get; set; }
+        public int? FlightReview { get; set; }
 
-        [Required(ErrorMessage = "Please provide a Rating.")]
+       // [Required(ErrorMessage = "Please provide a Rating.")]
         [Range(1, 5, ErrorMessage = "HotelRating must be between 1 and 5.")]
-        public int HotelReview { get; set; }
+        public int? HotelReview { get; set; }
 
-        [Required(ErrorMessage = "Please provide a Rating.")]
+       // [Required(ErrorMessage = "Please provide a Rating.")]
         [Range(1, 5, ErrorMessage = "TravelAgentRating must be between 1 and 5.")]
-        public int TravelAgentReview { get; set; }
+        public int? TravelAgentReview { get; set; }
 
 
         // Navigation properties

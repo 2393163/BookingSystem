@@ -33,10 +33,10 @@ namespace BookingSystem.Repository
                 command.Parameters.AddWithValue("@Rating", review.Rating);
                 command.Parameters.AddWithValue("@Comment", review.Comment);
                 command.Parameters.AddWithValue("@TimeStamp", review.TimeStamp);
-                command.Parameters.AddWithValue("@FoodReview", review.FoodReview);
-                command.Parameters.AddWithValue("@FlightReview", review.FlightReview);
-                command.Parameters.AddWithValue("@HotelReview", review.HotelReview);
-                command.Parameters.AddWithValue("@TravelAgentReview", review.TravelAgentReview);
+                command.Parameters.AddWithValue("@FoodReview", review.FoodReview.HasValue? review.FoodReview.Value:(object)DBNull.Value);
+                command.Parameters.AddWithValue("@FlightReview", review.FlightReview.HasValue ? review.FlightReview.Value : (object)DBNull.Value);
+                command.Parameters.AddWithValue("@HotelReview", review.HotelReview.HasValue ? review.HotelReview.Value : (object)DBNull.Value);
+                command.Parameters.AddWithValue("@TravelAgentReview", review.TravelAgentReview.HasValue ? review.TravelAgentReview.Value : (object)DBNull.Value);
 
                 await connection.OpenAsync();
                 return await command.ExecuteNonQueryAsync();

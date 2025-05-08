@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,33 +12,57 @@ namespace BookingSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingController : ControllerBase
+    public class BookandPaymentController : ControllerBase
     {
-        private readonly IBookandPaymentRepository _bookandPaymentRepository;
+        private readonly IBookandPaymentRepository _repository;
 
-        public BookingController(IBookandPaymentRepository bookandPaymentRepository)
+        public BookandPaymentController(IBookandPaymentRepository repository)
         {
-            _bookandPaymentRepository = bookandPaymentRepository;
+            _repository = repository;
         }
 
         [HttpGet]
         [Authorize(Roles = "Travel Agent, Admin")]
-        public async Task<IActionResult> GetBookings()
+        public async Task<IActionResult> GetAllBookings()
         {
-            var bookings = await _bookandPaymentRepository.GetAllBookingsAsync();
+            var bookings = await _repository.GetAllBookingsAsync();
+            return Ok(bookings);
+        }
+
+        [HttpGet("upcoming")]
+        [Authorize(Roles = "Travel Agent, Admin")]
+        public async Task<IActionResult> GetUpcomingBookings()
+        {
+            var bookings = await _repository.GetUpcomingBookings();
             return Ok(bookings);
         }
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Travel Agent, Admin")]
-        public async Task<IActionResult> GetBooking(int id)
+        public async Task<IActionResult> GetBookingById(int id)
         {
-            var booking = (await _bookandPaymentRepository.GetBookingsByBookingIDAsync(id)).FirstOrDefault();
-            if (booking == null)
+            var bookings = await _repository.GetBookingsByBookingIDAsync(id);
+            if (!bookings.Any())
             {
                 return NotFound();
             }
-            return Ok(booking);
+            return Ok(bookings.FirstOrDefault());
+        }
+
+        [HttpGet("user/{userId}")]
+        [Authorize(Roles = "Travel Agent, Admin")]
+        public async Task<IActionResult> GetBookingsByUserId(int userId)
+        {
+            var bookings = await _repository.GetBookingsByUserID(userId);
+            return Ok(bookings);
+        }
+
+        [HttpGet("date-range")]
+        [Authorize(Roles = "Travel Agent, Admin")]
+        public async Task<IActionResult> GetBookingsByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var bookings = await _repository.GetBookingsByDateRange(startDate, endDate);
+            return Ok(bookings);
         }
 
         [HttpPost]
@@ -60,20 +85,23 @@ namespace BookingSystem.Controllers
                 PaymentID = newBooking.PaymentID
             };
 
-            await _bookandPaymentRepository.AddBookingAsync(booking);
-            return CreatedAtAction(nameof(GetBooking), new { id = booking.BookingID }, booking);
+            await _repository.AddBookingAsync(booking);
+            return CreatedAtAction(nameof(GetBookingById), new { id = booking.BookingID }, booking);
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Travel Agent, Admin")]
-        public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingDTO updatedBooking)
+        public async Task<IActionResult> UpdateBooking(int id, [FromBody] DateTime startDate)
         {
-            if (updatedBooking == null || updatedBooking.BookingID != id)
-            {
-                return BadRequest("Booking data is invalid.");
-            }
+            await _repository.UpdateBookingAsync(id, startDate);
+            return NoContent();
+        }
 
-            await _bookandPaymentRepository.UpdateBookingAsync(id, updatedBooking.StartDate);
+        [HttpPut("cancel/{id}")]
+        [Authorize(Roles = "Travel Agent, Admin")]
+        public async Task<IActionResult> CancelBooking(int id)
+        {
+            await _repository.CancelBooking(id);
             return NoContent();
         }
 
@@ -81,7 +109,7 @@ namespace BookingSystem.Controllers
         [Authorize(Roles = "Travel Agent, Admin")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
-            await _bookandPaymentRepository.DeleteBookingAsync(id);
+            await _repository.DeleteBookingAsync(id);
             return NoContent();
         }
     }
