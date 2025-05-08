@@ -26,7 +26,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
 
         public async Task<ActionResult> GetReview(int id)
         {
@@ -39,7 +39,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddReview([FromBody] ReviewDTO newReview)
         {
             if (newReview == null)
@@ -67,23 +67,28 @@ namespace BookingSystem.Controllers
 
 
         [HttpPut("{id}")]
-        [Authorize]
-
-        public async Task<IActionResult> PutReview(int id, Review review)
+        //[Authorize]
+        public async Task<IActionResult> PutReview(int id, ReviewDTO review)
         {
-            if (id != review.UserID)
+            if (id != review.ReviewID)
             {
                 return BadRequest();
             }
 
-
-            await _reviewRepository.UpdateReviewAsync(id, review.Rating, review.Comment, review.TimeStamp, review.FoodReview, review.FlightReview, review.HotelReview, review.TravelAgentReview);
+            // Explicitly specify the method to resolve ambiguity
+            await _reviewRepository.UpdateReviewAsync(
+                reviewID: review.ReviewID,
+                rating: review.Rating,
+                comment: review.Comment,
+                timeStamp: review.TimeStamp
+                
+            );
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> DeleteReview(int id)
         {
             await _reviewRepository.DeleteReviewAsync(id);
@@ -93,62 +98,62 @@ namespace BookingSystem.Controllers
 
 
         [HttpGet("count")]
-        [Authorize]
+       // [Authorize]
         public async Task<ActionResult<int>> GetReviewCount()
         {
             return Ok(await _reviewRepository.ReviewCountAsync());
         }
 
         [HttpGet("package/{packageID}")]
-        [Authorize]
+       // [Authorize]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByPackageID(int packageID)
         {
             return Ok(await _reviewRepository.FetchReviewsByPackageIDAsync(packageID));
         }
 
         [HttpGet("user/{userID}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize(Roles = "Travel Agent, Admin")]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByUser(int userID)
         {
             return Ok(await _reviewRepository.FetchReviewsByUserAsync(userID));
         }
 
         [HttpGet("rating/{rating}")]
-        [Authorize]
+       // [Authorize]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByRating(int rating)
         {
             return Ok(await _reviewRepository.FetchReviewsByRatingAsync(rating));
         }
 
         [HttpGet("recent/{count}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<Review>>> GetRecentReviews(int count)
         {
             return Ok(await _reviewRepository.FetchRecentReviewsAsync(count));
         }
 
         [HttpGet("top-rated/{count}")]
-        [Authorize]
+      //  [Authorize]
         public async Task<ActionResult<IEnumerable<Review>>> GetTopRatedReviews(int count)
         {
             return Ok(await _reviewRepository.FetchTopRatedReviewsAsync(count));
         }
 
         [HttpGet("average-rating/{packageID}")]
-        [Authorize]
+       // [Authorize]
         public async Task<ActionResult<double>> GetAverageRating(int packageID)
         {
             return Ok(await _reviewRepository.FetchAverageRatingAsync(packageID));
         }
 
         [HttpGet("keyword/{keyword}")]
-        [Authorize]
+       // [Authorize]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviewsByKeyword(string keyword)
         {
             return Ok(await _reviewRepository.FetchReviewsByKeywordAsync(keyword));
         }
 
-        [HttpGet("top-rated-food")]
+       [HttpGet("top-rated-food")]
         public async Task<ActionResult<List<Review>>> GetTopRatedFoodReviews(int count)
         {
             var reviews = await _reviewRepository.FetchTopRatedFoodReviewsAsync(count);
@@ -175,10 +180,6 @@ namespace BookingSystem.Controllers
             var reviews = await _reviewRepository.FetchTopRatedTravelAgentReviewsAsync(count);
             return Ok(reviews);
         }
-
-
-
-
 
     }
 }

@@ -9,7 +9,7 @@ namespace BookingSystem.Repository
     {
         // CRUD operations for Reviews
         Task<int> AddReviewAsync(Review review);
-        Task<int> UpdateReviewAsync(int reviewID, int rating, string comment, DateTime timeStamp, int foodReview, int flightReview, int hotelReview, int travelAgentReview);
+        Task<int> UpdateReviewAsync(int reviewID, int rating, string comment, DateTime timeStamp);
         Task<int> DeleteReviewAsync(int reviewID);
         Task<Review> GetReviewByIdAsync(int reviewID);
 
@@ -27,11 +27,8 @@ namespace BookingSystem.Repository
         Task<List<Review>> FetchReviewsByKeywordAsync(string keyword);
 
         // Additional methods for specific reviews
-
         Task<List<Review>> FetchTopRatedFoodReviewsAsync(int count);
-
         Task<List<Review>> FetchTopRatedFlightReviewsAsync(int count);
-
         Task<List<Review>> FetchTopRatedHotelReviewsAsync(int count);
         Task<List<Review>> FetchTopRatedTravelAgentReviewsAsync(int count);
     }
