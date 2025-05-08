@@ -174,7 +174,8 @@ namespace BookingSystem.Controllers
                 Price = newPackage.Price,
                 IncludedServices = newPackage.IncludedServices,
                 Category = newPackage.Category,
-                Travelagent = newPackage.Travelagent
+                Travelagent = newPackage.Travelagent,
+                image=newPackage.image
             };
 
             await _packageRepository.AddPackagesAsync(package);
