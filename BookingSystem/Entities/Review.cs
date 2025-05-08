@@ -25,6 +25,7 @@ namespace BookingSystem.Entities
         [Required(ErrorMessage = "Please provide the TimeStamp.")]
         public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
 
+<<<<<<< HEAD
         // New properties for specific reviews
         [Range(1, 5, ErrorMessage = "FoodRating must be between 1 and 5.")]
         public int? FoodReview { get; set; }
@@ -37,6 +38,26 @@ namespace BookingSystem.Entities
 
         [Range(1, 5, ErrorMessage = "TravelAgentRating must be between 1 and 5.")]
         public int? TravelAgentReview { get; set; }
+=======
+        //New properties for specific reviews
+
+       // [Required(ErrorMessage = "Please provide a Rating.")]
+        [Range(1, 5, ErrorMessage = "FoodRating must be between 1 and 5.")]
+        public int? FoodReview { get; set; }
+
+       // [Required(ErrorMessage = "Please provide a Rating.")]
+        [Range(1, 5, ErrorMessage = "FlightRating must be between 1 and 5.")]
+        public int? FlightReview { get; set; }
+
+       // [Required(ErrorMessage = "Please provide a Rating.")]
+        [Range(1, 5, ErrorMessage = "HotelRating must be between 1 and 5.")]
+        public int? HotelReview { get; set; }
+
+       // [Required(ErrorMessage = "Please provide a Rating.")]
+        [Range(1, 5, ErrorMessage = "TravelAgentRating must be between 1 and 5.")]
+        public int? TravelAgentReview { get; set; }
+
+>>>>>>> 5e296d3296931df6b5a57662d8126855c43ff125
 
         // Navigation properties
         public User? User { get; set; }

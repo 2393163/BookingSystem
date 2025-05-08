@@ -1,0 +1,44 @@
+USE [TravelBookingDb-4]
+GO
+
+INSERT INTO [dbo].[Packages]
+           ([Title]
+           ,[Description]
+           ,[Duration]
+           ,[Price]
+           ,[IncludedServices]
+           ,[Category]
+           ,[Travelagent]
+           ,[image])
+     VALUES
+           ('Paris', 'The city of lights, known for its art, fashion, and culture.', 5, 2500, 'Hotel: Le Bristol, Food, Travel: Flight', 'Summer', 1, 'https://www.tripsavvy.com/thmb/GKyG-p3qSCWFgl9d-YBF6sLRIrY=/5760x3840/filters:fill(auto,1)/GettyImages-559699279-58f4f3cb5f9b582c4dfb1b29.jpg'),
+           ('Maldives', 'Tropical paradise with stunning beaches and clear waters.', 10, 4500, 'Hotel: Waldorf Astoria, Food, Travel: Flight', 'Honeymoon', 2, 'https://tse1.mm.bing.net/th/id/OIP.zLUZE4RvIbjysH3KbOpK3wHaEo?rs=1&pid=ImgDetMain'),
+           ('Manali', 'A beautiful hill station known for its scenic beauty and adventure sports.', 3, 800, 'Hotel: The Himalayan, Food, Travel: Bus', 'Winter', 3, 'https://www.tripsavvy.com/thmb/zyqX35L3rgFRuVrbGioDKoqPezc=/2121x1414/filters:fill(auto,1)/GettyImages-930881934-5ae56fe48023b90036464e72.jpg'),
+           ('Varanasi', 'One of the oldest cities in the world, known for its spiritual significance.', 5, 1200, 'Hotel: BrijRama Palace, Food, Travel: Train', 'Devotional', 4, 'https://lp-cms-production.imgix.net/2019-06/GettyImages-475540390_medium.jpg?auto=format&fit=crop&vib=20&sharp=10&ixlib=react-8.6.4'),
+           ('Tokyo', 'A bustling metropolis blending traditional and modern culture.', 5, 3000, 'Hotel: The Peninsula, Food, Travel: Flight', 'Summer', 5, 'https://tse2.mm.bing.net/th/id/OIP.D54vTszqmxaz_4vAu1dXNAHaEo?rs=1&pid=ImgDetMain'),
+           ('Bali', 'An Indonesian island known for its forested volcanic mountains and beaches.', 10, 4000, 'Hotel: Bvlgari Resort, Food, Travel: Flight', 'Honeymoon', 1, 'https://tse1.mm.bing.net/th/id/OIP.NshmvmcM-MS3HQj36HrfQAHaE3?rs=1&pid=ImgDetMain'),
+           ('Shimla', 'A popular hill station known for its Victorian architecture.', 3, 900, 'Hotel: Wildflower Hall, Food, Travel: Bus', 'Winter', 2, 'https://tse4.mm.bing.net/th/id/OIP.YyO9NGhp8iylHLQnLht4GgHaEo?rs=1&pid=ImgDetMain'),
+           ('Rishikesh', 'A city in India known for its yoga and meditation centers.', 5, 1000, 'Hotel: Ananda in the Himalayas, Food, Travel: Train', 'Devotional', 3, 'https://th.bing.com/th/id/R.f2257da2442701aba39349eb1128cc2a?rik=H%2fq3tvjE5DCHDA&riu=http%3a%2f%2frishikesh.net%2fwp-content%2fuploads%2f2019%2f11%2fbigstock-Rishikesh-India-Circa-April-329638714.jpg&ehk=Uptj5ZNmgYbgnXdTnXB21UeyOAYxRd7N2uJYsT4MWHM%3d&risl=1&pid=ImgRaw&r=0'),
+           ('New York', 'The city that never sleeps, known for its skyline and cultural diversity.', 5, 3500, 'Hotel: The Ritz-Carlton, Food, Travel: Flight', 'Summer', 4, 'https://tse3.mm.bing.net/th/id/OIP.-TzFBbHeO7cr_QR7Z466wQHaE8?rs=1&pid=ImgDetMain'),
+           ('Santorini', 'A Greek island known for its stunning sunsets and white-washed buildings.', 10, 4200, 'Hotel: Canaves Oia, Food, Travel: Flight', 'Honeymoon', 5, 'https://tse4.mm.bing.net/th/id/OIP.0-6v6ny2AUDQ9P-VNmUSHgHaEo?rs=1&pid=ImgDetMain'),
+           ('Gulmarg', 'A town in the Indian state of Jammu and Kashmir known for its ski resorts.', 3, 900, 'Hotel: The Khyber, Food, Travel: Bus', 'Winter', 1, 'https://tse2.mm.bing.net/th/id/OIP.IJ6sKwb4rV6HIjhmayCKXwHaFj?rs=1&pid=ImgDetMain'),
+           ('Haridwar', 'An ancient city and important Hindu pilgrimage site in India.', 5, 1100, 'Hotel: Haveli Hari Ganga, Food, Travel: Train', 'Devotional', 2, 'https://i.pinimg.com/originals/35/ab/c7/35abc7d10942973ea5410f7e954c4ef6.jpg'),
+           ('London', 'The capital of England, known for its history and landmarks.', 5, 3200, 'Hotel: The Connaught, Food, Travel: Flight', 'Summer', 3, 'https://th.bing.com/th/id/R.88ebe07da965352e560e8c2fae10789b?rik=i1KSh1UwaNr91Q&riu=http%3a%2f%2fwallpapercave.com%2fwp%2ftKCaN8t.jpg&ehk=sf3cNLMFWg21TU5SK7C%2f4O3jL%2fO%2f4O8qxwo2%2bmJbMy8%3d&risl=&pid=ImgRaw&r=0'),
+           ('Phuket', 'A rainforested, mountainous island in Thailand.', 10, 3800, 'Hotel: Amanpuri, Food, Travel: Flight', 'Honeymoon', 4, 'https://a.cdn-hotels.com/gdcs/production25/d1902/53b16d97-cc81-40cc-ad3b-1497d887b298.jpg'),
+           ('Ooty', 'A hill station in Tamil Nadu known for its tea gardens.', 3, 700, 'Hotel: Savoy, Food, Travel: Bus', 'Winter', 5, 'https://img.veenaworld.com/wp-content/uploads/2019/12/A-Honeymoon-Guide-to-Super-Romantic-Places-in-Ooty-scaled-e1646918862241.jpg'),
+           ('Amritsar', 'A city in Punjab, India, known for the Golden Temple.', 5, 1300, 'Hotel: Hyatt Regency, Food, Travel: Train', 'Devotional', 1, 'https://cdn.audleytravel.com/3987/2848/79/1340503-amritsars-golden-temple.jpg'),
+           ('Rome', 'The capital city of Italy, known for its nearly 3,000 years of globally influential art.', 5, 3400, 'Hotel: Hotel Eden, Food, Travel: Flight', 'Summer', 2, 'https://media.cntraveler.com/photos/58da7b6e1021b64be09794da/master/pass/GettyImages-177303568.jpg'),
+           ('Mauritius', 'An Indian Ocean island nation known for its beaches, lagoons, and reefs.', 10, 4500, 'Hotel: One&Only Le Saint Géran, Food, Travel: Flight', 'Honeymoon', 3, 'https://www.fodors.com/wp-content/uploads/2018/09/3.1-Ultimate-Things-To-Do-Mauritius-Climb-Le-Morne-Brabant-01-shutterstock_732398668.jpg'),
+           ('Leh', 'A town in the Indian state of Jammu and Kashmir known for its Buddhist sites.', 3, 850, 'Hotel: The Grand Dragon, Food, Travel: Bus', 'Winter', 4, 'https://tse2.mm.bing.net/th/id/OIP.Io20lEv88MRftlhq31akwAHaEK?rs=1&pid=ImgDetMain'),
+           
+('Puri', 'A coastal city in Odisha, India, known for the Jagannath Temple.', 5, 1400, 'Hotel: Mayfair Waves, Food, Travel: Train', 'Devotional', 5, 'https://tse4.mm.bing.net/th/id/OIP.BwQ4nl_clxNKoVOBH_tdHAHaEZ?w=700&h=415&rs=1&pid=ImgDetMain'),
+           ('Barcelona', 'A city in Spain known for its art and architecture.', 5, 2800, 'Hotel: Hotel Arts, Food, Travel: Flight', 'Summer', 1, 'https://www.tripsavvy.com/thmb/fUNCrGzLEWVQWnSIdo_kOypqPrY=/4208x2366/filters:no_upscale():max_bytes(150000):strip_icc()/spain--barcelona--panoramic-view-of-barcelona-cathedral-735895859-599aedf7685fbe0010120fc1.jpg'),
+           ('Malaga', 'A port city on southern Spain’s Costa del Sol.', 10, 3500, 'Hotel: Gran Hotel Miramar, Food, Travel: Flight', 'Honeymoon', 2, 'https://tse2.mm.bing.net/th/id/OIP.K0Sa-k3EbV_tFwHs4zkGIwHaE6?rs=1&pid=ImgDetMain'),
+           ('Nainital', 'A Himalayan resort town in the Kumaon region of India’s Uttarakhand state.', 3, 800, 'Hotel: The Naini Retreat, Food, Travel: Bus', 'Winter', 3, 'https://www.clubmahindra.com/blog/media/section_images/shuttersto-b9d5e12a4e1142e.jpg'),
+           ('Tirupati', 'A city in Andhra Pradesh, India, known for the Tirumala Venkateswara Temple.', 5, 1500, 'Hotel: Marasa Sarovar Premiere, Food, Travel: Train', 'Devotional', 4, 'https://tse4.mm.bing.net/th/id/OIP.CX-Vu8BLO3h1S_Ce_-2S2gHaD4?rs=1&pid=ImgDetMain'),
+           ('Sydney', 'The largest city in Australia, known for its Sydney Opera House.', 5, 3200, 'Hotel: Park Hyatt, Food, Travel: Flight', 'Summer', 5, 'https://tse1.mm.bing.net/th/id/OIP.9vxlA1nfGKra9LvfhXIhQwHaE5?rs=1&pid=ImgDetMain'),
+           ('Seychelles', 'An archipelago of 115 islands in the Indian Ocean.', 10, 4800, 'Hotel: Four Seasons Resort, Food, Travel: Flight', 'Honeymoon', 1, 'https://lp-cms-production.imgix.net/features/2018/02/beach_seychelles_lonelyplanet-32af2dc7fd07.jpg?auto=format&q=75&w=1920'),
+           ('Auli', 'A Himalayan ski resort and hill station in the north Indian state of Uttarakhand.', 3, 900, 'Hotel: Clifftop Club, Food, Travel: Bus', 'Winter', 2, 'https://assets-news.housing.com/news/wp-content/uploads/2022/08/17000902/AULI-FEATURE-compressed.jpg'),
+           ('Dwarka', 'A city in Gujarat, India, known for the Dwarkadhish Temple.', 5, 1600, 'Hotel: Dwarkadhish Lords Eco Inn, Food, Travel: Train', 'Devotional', 3, 'https://tse4.mm.bing.net/th/id/OIP.xJWAKplrGCa9-ze5Q9tSowHaEo?rs=1&pid=ImgDetMain'),
+           ('Los Angeles', 'A sprawling Southern California city known for its entertainment industry.', 5, 3500, 'Hotel: The Beverly Hills Hotel, Food, Travel: Flight', 'Summer', 4, 'https://www.tripsavvy.com/thmb/A_W5og5pijCdqB6KvjJsSurPPX0=/3865x2576/filters:no_upscale():max_bytes(150000):strip_icc()/los-angeles-skyline-ca-516394519-58a4941d3df78c4758ae8162.jpg');
+GO

@@ -11,10 +11,10 @@
 
         //New properties for specific reviews
 
-        public int FoodReview { get; set; }
-        public int FlightReview { get; set; }
-        public int HotelReview { get; set; }
-        public int TravelAgentReview { get; set; }
+        public int? FoodReview { get; set; }
+        public int? FlightReview { get; set; }
+        public int? HotelReview { get; set; }
+        public int? TravelAgentReview { get; set; }
 
     }
 }
