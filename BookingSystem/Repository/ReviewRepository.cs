@@ -42,23 +42,20 @@ namespace BookingSystem.Repository
                 return await command.ExecuteNonQueryAsync();
             }
         }
+        // Removed duplicate method definition to resolve CS0111 error
+
         #endregion
 
-        #region UpdateReviewAsync
-        public async Task<int> UpdateReviewAsync(int reviewID, int rating, string comment, DateTime timeStamp, int foodReview, int flightReview, int hotelReview, int travelAgentReview)
+        #region Update
+        public async Task<int> UpdateReviewAsync(int reviewID, int rating, string comment, DateTime timeStamp)
         {
             using (var connection = GetConnection())
             {
-                var command = new SqlCommand("UPDATE Review SET Rating = @Rating, Comment = @Comment, TimeStamp = @TimeStamp, FoodReview = @FoodReview, FlightReview = @FlightReview, HotelReview = @HotelReview, TravelAgentReview = @TravelAgentReview WHERE ReviewID = @ReviewID", connection);
-
+                var command = new SqlCommand("UPDATE Review SET Rating = @Rating, Comment = @Comment, TimeStamp = @TimeStamp WHERE ReviewID = @ReviewID", connection);
                 command.Parameters.AddWithValue("@ReviewID", reviewID);
                 command.Parameters.AddWithValue("@Rating", rating);
                 command.Parameters.AddWithValue("@Comment", comment);
                 command.Parameters.AddWithValue("@TimeStamp", timeStamp);
-                command.Parameters.AddWithValue("@FoodReview", foodReview);
-                command.Parameters.AddWithValue("@FlightReview", flightReview);
-                command.Parameters.AddWithValue("@HotelReview", hotelReview);
-                command.Parameters.AddWithValue("@TravelAgentReview", travelAgentReview);
 
                 await connection.OpenAsync();
                 return await command.ExecuteNonQueryAsync();
@@ -509,6 +506,10 @@ namespace BookingSystem.Repository
 
             return reviews;
         }
+
+        
+
+        
         #endregion
 
 
