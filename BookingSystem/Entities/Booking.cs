@@ -23,7 +23,7 @@ namespace BookingSystem.Entities
 
         [Required(ErrorMessage = "Please provide the Status.")]
         [MaxLength(100, ErrorMessage = "The Status must not exceed 100 characters.")]
-        public string Status { get; set; }
+        public string Status { get; set; } = "Booked";
 
         [Required(ErrorMessage = "Please provide the PaymentID.")]
         public long PaymentID { get; set; } // Removed [MaxLength] since it's not applicable to numeric types.

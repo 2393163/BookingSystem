@@ -26,7 +26,7 @@ namespace BookingSystem.Repository
             }
         }
 
-        public async Task UpdateAssistanceRequestAsync(int RequestID, string IssueDescription)
+        public async Task UpdateAssistanceRequestAsync(int RequestID, string IssueDescription, string status)
         {
             using (var context = new CombinedDbContext())
             {
@@ -34,6 +34,7 @@ namespace BookingSystem.Repository
                 if (assistanceRequest != null)
                 {
                     assistanceRequest.IssueDescription = IssueDescription;
+                    assistanceRequest.Status = status;
                     await context.SaveChangesAsync();
                 }
             }

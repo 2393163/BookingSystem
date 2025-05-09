@@ -73,7 +73,7 @@ namespace BookingSystem.Controllers
                 return BadRequest("Assistance data is invalid.");
             }
 
-            await _assistanceRepository.UpdateAssistanceRequestAsync(id, updatedAssistance.IssueDescription);
+            await _assistanceRepository.UpdateAssistanceRequestAsync(id, updatedAssistance.IssueDescription, updatedAssistance.Status);
             return NoContent();
         }
 

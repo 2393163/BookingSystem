@@ -9,7 +9,7 @@ using BookingSystem.Entities;
 
 namespace BookingSystem.Services
 {
-    public class JwtTokenGenerator:IJwtTokenGenerator
+    public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly IConfiguration _configuration;
 
@@ -27,7 +27,16 @@ namespace BookingSystem.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()), // Unique User ID
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role) // Assigns Role-based Claims
+                new Claim(ClaimTypes.Role, user.Role), // Assigns Role-based Claims
+            };
+
+            var payload = new Dictionary<string, object>
+            {
+                { "UserID", user.UserID }, // Unique User ID
+                { "Email", user.Email },   // User Email
+                { "Role", user.Role } ,
+                {"Name",user.Name },
+                {"ContactNumber",user.ContactNumber }// User Role directly in the payload
             };
 
             var token = new JwtSecurityToken(
@@ -38,8 +47,12 @@ namespace BookingSystem.Services
                 signingCredentials: credentials
             );
 
+            foreach (var item in payload)
+            {
+                token.Payload[item.Key] = item.Value;
+            }
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-
 }

@@ -66,21 +66,21 @@ namespace BookingSystem.Controllers
         }
 
 
-        [HttpPut("{id}")]
-        [Authorize]
+        //[HttpPut("{id}")]
+        //[Authorize]
 
-        public async Task<IActionResult> PutReview(int id, Review review)
-        {
-            if (id != review.UserID)
-            {
-                return BadRequest();
-            }
+        //public async Task<IActionResult> PutReview(int id, Review review)
+        //{
+        //    if (id != review.UserID)
+        //    {
+        //        return BadRequest();
+        //    }
 
 
-            await _reviewRepository.UpdateReviewAsync(id, review.Rating, review.Comment, review.TimeStamp, review.FoodReview, review.FlightReview, review.HotelReview, review.TravelAgentReview);
+        //    await _reviewRepository.UpdateReviewAsync(id, review.Rating, review.Comment, review.TimeStamp, review.FoodReview, review.FlightReview, review.HotelReview, review.TravelAgentReview);
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         [HttpDelete("{id}")]
         [Authorize]

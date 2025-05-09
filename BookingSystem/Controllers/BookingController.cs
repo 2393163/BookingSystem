@@ -22,7 +22,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> GetAllBookings()
         {
             var bookings = await _repository.GetAllBookingsAsync();
@@ -30,7 +30,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet("upcoming")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> GetUpcomingBookings()
         {
             var bookings = await _repository.GetUpcomingBookings();
@@ -38,7 +38,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> GetBookingById(int id)
         {
             var bookings = await _repository.GetBookingsByBookingIDAsync(id);
@@ -50,7 +50,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> GetBookingsByUserId(int userId)
         {
             var bookings = await _repository.GetBookingsByUserID(userId);
@@ -58,7 +58,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet("date-range")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> GetBookingsByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
             var bookings = await _repository.GetBookingsByDateRange(startDate, endDate);
@@ -66,7 +66,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> AddBooking([FromBody] BookingDTO newBooking)
         {
             if (newBooking == null)
@@ -90,7 +90,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] DateTime startDate)
         {
             await _repository.UpdateBookingAsync(id, startDate);
@@ -98,15 +98,14 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPut("cancel/{id}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
-        public async Task<IActionResult> CancelBooking(int id)
+        public async Task<IActionResult> CancelBooking(long id)
         {
             await _repository.CancelBooking(id);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Travel Agent, Admin")]
+        //[Authorize]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             await _repository.DeleteBookingAsync(id);

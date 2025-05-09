@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BookingSystem.DTOs;
 using BookingSystem.Entities;
 
 namespace BookingSystem.Repository
@@ -10,7 +11,7 @@ namespace BookingSystem.Repository
         Task AddUsers(User newuser);
         Task<List<User>> GetAllUsers();
         Task<List<User>> GetUsersByName(string UserName);
-        Task UpdateUser(long UserId, string newName, string newEmail, string newContact);
+        Task UpdateUser(long UserId, UserDTO newuser);
         Task DeleteUser(long userId);
         Task<User> GetUserById(long id);
         Task<int> GetTotalUsers();

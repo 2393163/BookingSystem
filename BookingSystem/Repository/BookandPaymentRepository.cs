@@ -17,7 +17,7 @@ namespace BookingSystem.Repository
                 await context.SaveChangesAsync();
             }
         }
-        public async Task<List<Booking>> GetAllBookingsAsync()
+        public async Task <List<Booking>> GetAllBookingsAsync()
         {
             using (var context = new CombinedDbContext())
             {
@@ -25,7 +25,7 @@ namespace BookingSystem.Repository
                 return bookings;
             }
         }
-        public async Task<List<Booking>> GetUpcomingBookings()
+        public async Task <List<Booking>> GetUpcomingBookings()
         {
             using (var context = new CombinedDbContext())
             {
@@ -61,15 +61,27 @@ namespace BookingSystem.Repository
                 }
             }
         }
-        public async Task CancelBooking(int BookingID)
+        public async Task CancelBooking(long BookingID)
         {
             using (var context = new CombinedDbContext())
             {
                 var booking = await context.Bookings.FindAsync(BookingID);
                 if (booking != null)
                 {
-                    booking.Status = "Cancelled";
-                    await context.SaveChangesAsync();
+                    // Check if the current date is within 7 days after the StartDate
+                    if (DateTime.Now <= booking.StartDate && DateTime.Now <= booking.StartDate.AddDays(-7))
+                    {
+                        booking.Status = "Cancelled";
+                        await context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Booking can only be canceled  7 days Before the start date.");
+                    }
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Booking not found.");
                 }
             }
         }
@@ -81,7 +93,7 @@ namespace BookingSystem.Repository
                 return bookings;
             }
         }
-        public async Task DeleteBookingAsync(int BookingID)
+        public async Task DeleteBookingAsync(long BookingID)
         {
             using (var dbContext = new CombinedDbContext())
             {

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BookingSystem.Data;
+using BookingSystem.DTOs;
 using BookingSystem.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,16 +45,17 @@ namespace BookingSystem.Repository
             }
         }
 
-        public async Task UpdateUser(long UserId, string newName, string newEmail, string newContact)
+        public async Task UpdateUser(long UserId, UserDTO newuser)
         {
             using (var dbContext = new CombinedDbContext())
             {
                 var user = await dbContext.Users.FindAsync(UserId);
                 if (user != null)
                 {
-                    user.Name = newName;
-                    user.Email = newEmail;
-                    user.ContactNumber = newContact;
+                    user.Name = newuser.Name;
+                    user.Email = newuser.Email;
+                    user.Password = newuser.Password;
+                    user.ContactNumber = newuser.ContactNumber;
                     await dbContext.SaveChangesAsync();
                 }
             }
