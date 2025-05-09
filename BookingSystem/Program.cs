@@ -38,10 +38,10 @@ namespace BookingSystem
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowFrontend",
+                options.AddPolicy("AllowAngularApp",
                     policy =>
                     {
-                        policy.WithOrigins("*") // ✅ Allow your Angular app
+                        policy.AllowAnyOrigin() // ✅ Allow your Angular app
                               .AllowAnyMethod()
                               .AllowAnyHeader();
                     });
@@ -124,7 +124,7 @@ namespace BookingSystem
             app.UseHttpsRedirection();
 
             //app.UseCors("AllowSpecificOrigins"); 
-            app.UseCors("AllowFrontend");
+            app.UseCors("AllowAngularApp");
 
             app.UseAuthentication();
 

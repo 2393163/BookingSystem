@@ -8,7 +8,7 @@ namespace BookingSystem.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=TravelBookingDb-4;Integrated Security=True;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=TravelBookingDb-5;Integrated Security=True;TrustServerCertificate=true");
         }
 
         public DbSet<User> Users { get; set; }

@@ -66,20 +66,6 @@ namespace BookingSystem.Controllers
         }
 
 
-<<<<<<< HEAD
-        //[HttpPut("{id}")]
-        //[Authorize]
-
-        //public async Task<IActionResult> PutReview(int id, Review review)
-        //{
-        //    if (id != review.UserID)
-        //    {
-        //        return BadRequest();
-        //    }
-
-
-        //    await _reviewRepository.UpdateReviewAsync(id, review.Rating, review.Comment, review.TimeStamp, review.FoodReview, review.FlightReview, review.HotelReview, review.TravelAgentReview);
-=======
         [HttpPut("{id}")]
         //[Authorize]
         public async Task<IActionResult> PutReview(int id, ReviewDTO review)
@@ -95,12 +81,10 @@ namespace BookingSystem.Controllers
                 rating: review.Rating,
                 comment: review.Comment,
                 timeStamp: review.TimeStamp
-                
-            );
->>>>>>> e489541aadb57092e9db523f6509983c0c76f52e
 
-        //    return NoContent();
-        //}
+            );
+            return NoContent();
+        }
 
         [HttpDelete("{id}")]
         //[Authorize]
