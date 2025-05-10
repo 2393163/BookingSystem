@@ -29,7 +29,7 @@ namespace BookingSystem
             
             
             builder.Services.AddScoped<IAssistanceRepository, AssistanceRepository>();
-            builder.Services.AddScoped<IBookandPaymentRepository, BookandPaymentRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IInsuranceRepository, InsuranceRepository>();
             builder.Services.AddScoped<IPackageRepository, PackageRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();

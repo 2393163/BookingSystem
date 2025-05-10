@@ -6,7 +6,7 @@ using BookingSystem.Entities;
 
 namespace BookingSystem.Repository
 {
-    public interface IBookandPaymentRepository
+    public interface IBookingRepository
     {
         Task AddBookingAsync(Booking booking);
         Task<List<Booking>> GetAllBookingsAsync();
@@ -15,9 +15,9 @@ namespace BookingSystem.Repository
         Task<List<Booking>> GetUpcomingBookings();
         Task<List<Booking>> GetBookingsByDateRange(DateTime startDate, DateTime endDate);
 
-        Task UpdateBookingAsync(long BookingID, DateTime StartDate);
+        Task UpdateBookingAsync(long BookingID, DateTime StartDate, DateTime endDate);
 
-        Task DeleteBookingAsync(long BookingID);
+        Task<bool> DeleteBookingAsync(long BookingID);
         Task CancelBooking(long BookingID);
 
 

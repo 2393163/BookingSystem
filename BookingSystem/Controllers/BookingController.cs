@@ -12,17 +12,17 @@ namespace BookingSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookandPaymentController : ControllerBase
+    public class BookingController : ControllerBase
     {
-        private readonly IBookandPaymentRepository _repository;
+        private readonly IBookingRepository _repository;
 
-        public BookandPaymentController(IBookandPaymentRepository repository)
+        public BookingController(IBookingRepository repository)
         {
             _repository = repository;
         }
 
         [HttpGet]
-        //[Authorize]
+        
         public async Task<IActionResult> GetAllBookings()
         {
             var bookings = await _repository.GetAllBookingsAsync();
@@ -90,10 +90,10 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize]
-        public async Task<IActionResult> UpdateBooking(int id, [FromBody] DateTime startDate)
+       
+        public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingUpdateDto dto)
         {
-            await _repository.UpdateBookingAsync(id, startDate);
+            await _repository.UpdateBookingAsync(id, dto.StartDate, dto.EndDate);
             return NoContent();
         }
 
@@ -105,11 +105,16 @@ namespace BookingSystem.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize]
-        public async Task<IActionResult> DeleteBooking(int id)
+        public async Task<IActionResult> DeleteBooking(long id)
         {
-            await _repository.DeleteBookingAsync(id);
+            var result = await _repository.DeleteBookingAsync(id); 
+            if (!result)
+            {
+                return NotFound(new { Message = "Booking not found." });
+            }
+
             return NoContent();
         }
     }
 }
+

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.Repository
 {
-    public class BookandPaymentRepository:IBookandPaymentRepository
+    public class BookingRepository: IBookingRepository
     {
         public async Task AddBookingAsync(Booking booking)
         {
@@ -49,14 +49,15 @@ namespace BookingSystem.Repository
                 return bookings;
             }
         }
-        public async Task UpdateBookingAsync(long BookingID, DateTime StartDate)
+        public async Task UpdateBookingAsync(long BookingID, DateTime StartDate, DateTime EndDate)
         {
             using (var context = new CombinedDbContext())
             {
-                var user = context.Bookings.Find(BookingID);
-                if (user != null)
+                var booking = context.Bookings.Find(BookingID);
+                if (booking != null)
                 {
-                    user.StartDate = StartDate;
+                    booking.StartDate = StartDate;
+                    booking.EndDate = EndDate;
                     await context.SaveChangesAsync();
                 }
             }
@@ -93,16 +94,17 @@ namespace BookingSystem.Repository
                 return bookings;
             }
         }
-        public async Task DeleteBookingAsync(long BookingID)
+        public async Task <bool> DeleteBookingAsync(long bookingID)
         {
             using (var dbContext = new CombinedDbContext())
             {
-                var user = dbContext.Bookings.Find(BookingID);
-                if (user != null)
-                {
-                    dbContext.Bookings.Remove(user);
-                    await dbContext.SaveChangesAsync();
-                }
+                var booking = dbContext.Bookings.Find(bookingID);
+                if (booking == null)
+                    return false;
+
+                dbContext.Bookings.Remove(booking);
+                await dbContext.SaveChangesAsync();
+                return true;
             }
         }
     }

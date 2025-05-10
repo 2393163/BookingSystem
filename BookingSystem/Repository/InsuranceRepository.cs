@@ -30,7 +30,7 @@ namespace BookingSystem.Repository
 
                 if (duration == 3)
                 {
-                    coverageDetails = "Quarter Refund";
+                    coverageDetails = "Full Refund";
                     provider = "A";
                 }
                 else if (duration == 5)
@@ -40,7 +40,7 @@ namespace BookingSystem.Repository
                 }
                 else if (duration == 10)
                 {
-                    coverageDetails = "Full Refund";
+                    coverageDetails = "Quarter Refund";
                     provider = "C";
                 }
                 else

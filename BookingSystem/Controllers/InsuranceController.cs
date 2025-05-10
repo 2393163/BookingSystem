@@ -21,7 +21,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddInsurance([FromBody] InsuranceDTO insuranceDto)
         {
             if (insuranceDto == null)
@@ -31,11 +31,13 @@ namespace BookingSystem.Controllers
 
             try
             {
-                var insurance = await _insuranceRepository.AddInsuranceAsync(insuranceDto.UserID, insuranceDto.InsuranceID);
+                var insurance = await _insuranceRepository.AddInsuranceAsync(insuranceDto.UserID, insuranceDto.BookingID);
+
                 var result = new InsuranceDTO
                 {
                     InsuranceID = insurance.InsuranceID,
                     UserID = insurance.UserID,
+                    BookingID = insurance.BookingID,
                     CoverageDetails = insurance.CoverageDetails,
                     Provider = insurance.Provider,
                     Status = insurance.Status
@@ -49,7 +51,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        ////[Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<InsuranceDTO>>> GetAllInsurances()
         {
             var insurances = await _insuranceRepository.GetAllInsurancesAsync();
@@ -66,7 +68,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<InsuranceDTO>> GetInsuranceById(long id)
         {
             var insurances = await _insuranceRepository.GetAllInsurancesAsync();
@@ -90,7 +92,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateInsuranceStatus(long id, [FromBody] InsuranceDTO insuranceDto)
         {
             if (insuranceDto == null || insuranceDto.InsuranceID != id)
@@ -108,7 +110,7 @@ namespace BookingSystem.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteInsurance(long id)
         {
             await _insuranceRepository.DeleteInsuranceAsync((int)id);
